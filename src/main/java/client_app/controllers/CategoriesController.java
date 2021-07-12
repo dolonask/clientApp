@@ -2,7 +2,14 @@ package client_app.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import client_app.models.Category;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,14 +19,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import okhttp3.*;
 
 public class CategoriesController {
 
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private MenuItem mnItemAdd;
@@ -28,7 +31,9 @@ public class CategoriesController {
     private MenuItem mnItemEdit;
 
     @FXML
-    private ListView<?> listCategories;
+    private ListView<Category> listCategories;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @FXML
     void onMenuItemClicked(ActionEvent event) {
@@ -67,5 +72,25 @@ public class CategoriesController {
 
     @FXML
     void initialize() {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("http://localhost:8080/api/v1/category/all")
+                .build();
+
+        Call call = client.newCall(request);
+
+        try {
+            Response response = call.execute();
+            List<Category> categories = objectMapper.readValue(response.body().string(), new TypeReference<List<Category>>(){});
+
+            ObservableList<Category> observableList = FXCollections.observableList(categories);
+
+            listCategories.setItems(observableList);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -9,4 +9,10 @@ public class Category {
     private Long id;
     private String name;
     private boolean active;
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
 }
