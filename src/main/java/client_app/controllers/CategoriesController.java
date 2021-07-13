@@ -41,31 +41,55 @@ public class CategoriesController {
         if (event.getSource().equals(mnItemAdd)){
 
             Stage stage = new Stage();
-            Parent root = null;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/edit_category.fxml"));
             try {
-                root = FXMLLoader.load(getClass().getResource("/layout/edit_category.fxml"));
+                Parent parent = loader.load();
+                stage.setTitle("Создание категории");
+                stage.setScene(new Scene(parent));
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+                EditCategoryController editCategoryController = loader.getController();
+                editCategoryController.init(new Category());
+
+                stage.show();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            stage.setTitle("Создание категории");
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
+
 
         }else if (event.getSource().equals(mnItemEdit)){
             Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout/edit_category.fxml"));
+            try {
+
+                Parent parent = loader.load();
+                stage.setTitle("Редактирование категории");
+                stage.setScene(new Scene(parent));
+                stage.setResizable(false);
+                stage.initModality(Modality.APPLICATION_MODAL);
+
+                EditCategoryController editCategoryController = loader.getController();
+                editCategoryController.init(listCategories.getSelectionModel().getSelectedItem());
+
+                stage.show();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
             Parent root = null;
             try {
                 root = FXMLLoader.load(getClass().getResource("/layout/edit_category.fxml"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            stage.setTitle("Редактирование категории");
-            stage.setScene(new Scene(root));
-            stage.setResizable(false);
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
+
+
+
+
         }
 
     }
